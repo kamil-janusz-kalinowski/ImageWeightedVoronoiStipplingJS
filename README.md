@@ -6,6 +6,10 @@ Weighted Voronoi stippling is a visualization technique that aims to create an e
 
 ![image](https://github.com/kamil-janusz-kalinowski/ImageWeightedVoronoiStipplingJS/assets/143912944/d5a22b6f-e435-4732-8a2a-5f2e33168007)
 
+## Preview of HTML
+You can check result here: https://raw.githack.com/kamil-janusz-kalinowski/ImageWeightedVoronoiStipplingJS/main/index.html
+Currently, there is no option to modify parameters directly from the browser interface. Just drag and drop image from your folder. Therefore, it is recommended to use images with lower resolutions for optimal effects.
+
 ## Parameters:
 The repository also provides the ability to modify various parameters, such as the number of points or flags determining the color display method. Below are the variables that users can modify to customize the effect to their preferences:
 
