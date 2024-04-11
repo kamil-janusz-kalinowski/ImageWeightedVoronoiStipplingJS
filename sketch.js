@@ -4,7 +4,7 @@ let numPoints = 1000;
 let isColorDisp = false;
 let radiusDot = [0, 12];
 let brightnessThreshold = 0.1;
-let doInversion = true;
+let doInversion = false;
 let rescale_factor = 1;
 let move_factor = 0.5;
 
@@ -24,8 +24,10 @@ function preload() {
 }
 
 function setup() {
+  updateParameters();
   handleFileSelect();
-  preprocessingImage()
+  img.resize(img.width * rescale_factor, img.height * rescale_factor);
+  if (doInversion) img.filter(INVERT);
   let canvas = createCanvas(img.width, img.height);
   canvas.parent('drop-area');
   generatePoints();
@@ -39,8 +41,8 @@ function draw() {
     return;
   }
   if (isImageChanged) {
-    preprocessingImage();
-    points = [];
+    img.resize(img.width * rescale_factor, img.height * rescale_factor);
+    if (doInversion) img.filter(INVERT);
     generatePoints();
     updateVoronoi();
     isImageChanged = false;
@@ -82,6 +84,7 @@ function updateVoronoi(){
 
 // Point functions
 function generatePoints(){
+  points = [];
   for (let i = 0; i < numPoints; i++) {
     let x = random(img.width);
     let y = random(img.height);
@@ -130,11 +133,6 @@ function assignCentroids(weights) {
 }
 
 // Image preprocessing functions
-function preprocessingImage(){
-  img.resize(img.width * rescale_factor, img.height * rescale_factor);
-  if (doInversion) img.filter(INVERT);
-}
-
 function calculateCentroidsAndWeights(weights, counts) {
   img.loadPixels();
   let delaunayIndex = 0;
@@ -181,7 +179,6 @@ function initializeVoronoiVariables(){
   weights = new Array(cells.length).fill(0); 
   counts = new Array(cells.length).fill(0);
   avgWeights = new Array(cells.length).fill(0);
-
 
 }
 
@@ -257,4 +254,29 @@ function initializeVoronoiVariables(){
   for (let i = 0; i < centroids.length; i++) {
     centroids[i] = createVector(0, 0);
   }
+}
+
+// Event update params functions
+function updateParameters() {
+  // Add your form submission handling code here
+  document.getElementById('parametersForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // prevent the form from submitting
+
+    // get the form values
+    numPoints = parseInt(document.getElementById('numPoints').value);
+    isColorDisp = document.getElementById('isColorDisp').checked;
+    radiusDot = [parseInt(document.getElementById('radiusDotMin').value), parseInt(document.getElementById('radiusDotMax').value)];
+    brightnessThreshold = parseFloat(document.getElementById('brightnessThreshold').value);
+    doInversion_new = document.getElementById('doInversion').checked;
+    rescale_factor = parseFloat(document.getElementById('rescaleFactor').value);
+    move_factor = parseFloat(document.getElementById('moveFactor').value);
+
+    img.resize(img.width * rescale_factor, img.height * rescale_factor);
+    if (doInversion!=doInversion_new){
+      img.filter(INVERT);
+      doInversion = doInversion_new;
+    }
+    generatePoints();
+    updateVoronoi();
+  });
 }
