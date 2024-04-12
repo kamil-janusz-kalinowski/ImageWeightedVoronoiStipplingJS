@@ -26,8 +26,8 @@ function preload() {
 function setup() {
   updateParameters();
   handleFileSelect();
-  img.resize(img.width * rescale_factor, img.height * rescale_factor);
   if (doInversion) img.filter(INVERT);
+  img.resize(img.width * rescale_factor, img.height * rescale_factor);
   let canvas = createCanvas(img.width, img.height);
   canvas.parent('drop-area');
   generatePoints();
@@ -269,22 +269,33 @@ function updateParameters() {
     isColorDisp = document.getElementById('isColorDisp').checked;
     radiusDot = [parseInt(document.getElementById('radiusDotMin').value), parseInt(document.getElementById('radiusDotMax').value)];
     brightnessThreshold = parseFloat(document.getElementById('brightnessThreshold').value);
-    doInversion_new = document.getElementById('doInversion').checked;
-    rescale_factor_new = parseFloat(document.getElementById('rescaleFactor').value);
     move_factor = parseFloat(document.getElementById('moveFactor').value);
 
-    if (doInversion!=doInversion_new){
-      img.filter(INVERT);
-      doInversion = doInversion_new;
-    }
-    if (rescale_factor!=rescale_factor_new){
-      let rescale_factor_effective = rescale_factor_new/rescale_factor;
-      img.resize(img.width * rescale_factor_effective, img.height * rescale_factor_effective);
-      rescale_factor = rescale_factor_new;
-      let canvas = createCanvas(img.width, img.height);
-      canvas.parent('drop-area');
-    }
+    let doInversion_new = document.getElementById('doInversion').checked;
+    let rescale_factor_new = parseFloat(document.getElementById('rescaleFactor').value);
+
+    updateInversion(doInversion_new);
+    updateImageScale(rescale_factor_new);
+
     generatePoints();
     updateVoronoi();
   });
+}
+
+function updateInversion(doInversion_new){
+  if (doInversion!=doInversion_new){
+    img.filter(INVERT);
+    doInversion = doInversion_new;
+  }
+}
+
+function updateImageScale(rescale_factor_new){
+  if (rescale_factor!=rescale_factor_new){
+    let rescale_factor_effective = rescale_factor_new/rescale_factor;
+    img.resize(img.width * rescale_factor_effective, img.height * rescale_factor_effective);
+    rescale_factor = rescale_factor_new;
+
+    let canvas = createCanvas(img.width, img.height);
+    canvas.parent('drop-area');
+  }
 }
