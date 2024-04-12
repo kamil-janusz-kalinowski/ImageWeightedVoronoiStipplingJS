@@ -45,6 +45,8 @@ function draw() {
     if (doInversion) img.filter(INVERT);
     generatePoints();
     updateVoronoi();
+    let canvas = createCanvas(img.width, img.height);
+    canvas.parent('drop-area');
     isImageChanged = false;
   }
 
@@ -268,13 +270,19 @@ function updateParameters() {
     radiusDot = [parseInt(document.getElementById('radiusDotMin').value), parseInt(document.getElementById('radiusDotMax').value)];
     brightnessThreshold = parseFloat(document.getElementById('brightnessThreshold').value);
     doInversion_new = document.getElementById('doInversion').checked;
-    rescale_factor = parseFloat(document.getElementById('rescaleFactor').value);
+    rescale_factor_new = parseFloat(document.getElementById('rescaleFactor').value);
     move_factor = parseFloat(document.getElementById('moveFactor').value);
 
-    img.resize(img.width * rescale_factor, img.height * rescale_factor);
     if (doInversion!=doInversion_new){
       img.filter(INVERT);
       doInversion = doInversion_new;
+    }
+    if (rescale_factor!=rescale_factor_new){
+      let rescale_factor_effective = rescale_factor_new/rescale_factor;
+      img.resize(img.width * rescale_factor_effective, img.height * rescale_factor_effective);
+      rescale_factor = rescale_factor_new;
+      let canvas = createCanvas(img.width, img.height);
+      canvas.parent('drop-area');
     }
     generatePoints();
     updateVoronoi();
